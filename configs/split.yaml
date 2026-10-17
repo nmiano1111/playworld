@@ -1,0 +1,28 @@
+# Scenario B: cooperation and competition over a limited pool.
+#   playworld run split -config configs/split.yaml
+#
+# Agents talk freely, then submit sealed claims simultaneously. If the claims
+# fit the pool, everyone is paid what they asked; one unit over and everyone
+# gets nothing. Each agent has a private threshold worth a bonus, so their
+# incentives genuinely conflict and talk is cheap.
+#
+# The question the scenario exists to answer is in the `broken_promises` metric:
+# did the conversation actually constrain what they did?
+
+scenario: split
+rounds: 7          # 3 talk + claim + talk + claim, plus a spare
+seed: 11
+
+agents: [mira, dov, rook]
+
+params:
+  pool: 100
+  talk_rounds: 3
+  attempts: 2
+  bonus: 25
+  # Private thresholds. Leave this out and they are generated from the seed to
+  # sum to ~120% of the pool, so not everyone can be satisfied.
+  needs:
+    mira: 35
+    dov: 30
+    rook: 55

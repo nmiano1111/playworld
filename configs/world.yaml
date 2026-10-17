@@ -1,0 +1,113 @@
+# The open-ended world: a small persistent town.
+#
+#   playworld world new town              # uses this file automatically
+#   playworld world run town -for 2d      # advance two simulated days
+#   playworld world run town -for 3d      # later: continue for three more
+#
+# Every value here is copied into the world when it is created, so editing
+# this file changes new worlds only — an existing world keeps its own rules.
+# Anything left out keeps its built-in default.
+
+agents: [mira, dov, ada, rook]
+seed: 1
+
+places:
+  - id: square
+    name: the square
+    kind: square
+    description: the open heart of town, with benches and a public notice board
+  - id: market
+    name: the market
+    kind: market
+    description: a few stalls; there is paid shift work and building materials for sale
+  - id: workshop
+    name: the workshop
+    kind: workshop
+    description: a shared workshop with tools and a pile of salvageable scrap
+# Each resident also gets a home (home_<id>) automatically.
+
+scheduling:
+  start_hour: 7            # Day 1 starts at 07:00
+  day_start_hour: 7        # waking hours; ordinary triggers wait for morning
+  night_start_hour: 22
+  travel_minutes: 15       # walking between any two places
+  idle_minutes: 180        # default opportunity to decide when nothing happens
+  max_idle_minutes: 540    # idle interval backs off to this while an agent keeps declining
+  cooldown_minutes: 20     # minimum gap between two activations of one agent
+  reaction_minutes: 2      # window in which triggers from others coalesce
+  max_activations_per_day: 12
+  wake_on_speech: mention  # mention | all | none
+  wake_on_arrival: false
+  max_reply_chain: 3       # reactions-to-reactions that may wake someone; damps ping-pong
+  min_intention_minutes: 20
+  max_intention_hours: 72
+  max_pending_intentions: 4
+  max_intentions_per_activation: 2
+  max_pending_appointments: 4
+  min_appointment_minutes: 60  # meetings must be arranged at least this far ahead
+  max_reject_retriggers: 1
+  max_consecutive_invalid: 4   # refused activations in a row before a cool-off until idle time
+
+economy:
+  shift_hours: 3
+  shift_credits: 6
+  shifts_per_day: 4
+  material_price: 3
+  market_materials_per_day: 8
+  salvage_hours: 2
+  salvage_materials: 2
+  scrap_per_day: 6
+  build_hours: 2
+  project_yield: 2
+  max_project_credits: 60
+  max_project_materials: 30
+  max_project_labor: 24
+  max_open_projects: 2
+  offer_hours: 24
+  max_notices: 8
+
+starting: {credits: 10, materials: 1}
+
+# Modest starting differences. "knows" is delivered once, privately, as the
+# resident's first observations: true facts and existing familiarity only —
+# never instructions or goals. Residents without an entry use "starting" and
+# wake at home.
+per_agent:
+  mira:
+    goods: {credits: 14, materials: 0}
+    start: square
+    knows:
+      - The corner of the square by the notice board has stood empty for as long as you can remember.
+      - You have known Ada for years; you met Rook once at the market and he talked the whole time.
+  dov:
+    goods: {credits: 8, materials: 3}
+    start: workshop
+    knows:
+      - The workshop's scrap pile is refilled every dawn, but only enough for a few salvaging stints a day.
+      - You did a repair job for Rook last year and he paid late.
+  ada:
+    goods: {credits: 10, materials: 1}
+    knows:
+      - Most people in town pass through the square at some point in the day.
+      - You and Mira are old friends. You barely know Dov.
+  rook:
+    goods: {credits: 18, materials: 0}
+    start: market
+    knows:
+      - The market sells only a handful of materials a day, and they go fast.
+      - Dov still thinks you owe him an apology over last year's repair job.
+
+# Agent protocol options stored with the world (flags can override per run).
+dual_actions: true
+planning: true
+beliefs: false
+
+# How residents are grounded. "grounded" gives each activation an ordered
+# account of the resident's own holdings, offers, completed transfers,
+# surroundings and project requirements, names what is impossible right now,
+# folds repeated lines in its memory of the conversation, lets repeated
+# remarks and offers be heard without re-triggering, and lets a revised
+# intention replace the one it revises. "legacy" reproduces the original
+# observation and prompt, for before/after comparison. Override per world
+# with `-cognition legacy|grounded` when creating it.
+cognition: grounded

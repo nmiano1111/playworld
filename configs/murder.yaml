@@ -1,0 +1,24 @@
+# Scenario C: a murder, and a liar in the room.
+#   playworld run murder -config configs/murder.yaml
+#
+# One of these four secretly did it. The others only know that someone here
+# did, and each holds one private, possibly-misleading piece of evidence.
+# They talk, then vote in a sealed ballot revealed all at once. The murderer's
+# only job is to not be the one convicted.
+#
+# `murderer` is left unset here on purpose, so who it is varies with `-seed`.
+# Pin it (e.g. murderer: rook) for a reproducible test case.
+
+scenario: murder
+rounds: 6
+seed: 3
+
+agents: [mira, dov, ada, rook]
+
+params:
+  victim: the host of the dinner party
+  weapon: a kitchen knife
+  scene: the locked study
+  time: sometime after the lights went out
+  talk_rounds: 3
+  attempts: 2

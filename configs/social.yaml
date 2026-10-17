@@ -1,0 +1,23 @@
+# Scenario A: the social sandbox.
+#   playworld run social -config configs/social.yaml
+#
+# Nothing is scored here. The output is the shape of the interaction: who spoke
+# in public, who took whom aside, and what the group actually committed to.
+
+scenario: social
+rounds: 6
+seed: 7
+
+agents: [mira, dov, ada, rook]
+
+params:
+  setting: a long table in a rented house, the evening before the work starts
+  # A topic has to be decidable from what the agents actually know. If it
+  # depends on facts the environment never supplies, they will spend every
+  # round reasonably refusing to commit — which is a real result, but a boring
+  # one.
+  topic: >
+    there are three jobs, one per week. Two are ordinary. The third is the
+    night shift, which everyone agrees is far worse and pays exactly the same.
+    Somebody has to take it and nobody has volunteered
+  support_needed: 2

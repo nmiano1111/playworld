@@ -1,0 +1,40 @@
+# Scenario D: the community center.
+#   playworld run community -config configs/community.yaml
+#
+# A town has inherited an empty building and seven simulated days to decide
+# what becomes of it. No one agent has enough, alone, to fund a project; the
+# last day is a sealed vote, and winning that vote is necessary but not
+# sufficient — the winning proposal still has to be actually funded, and its
+# own declared budget still has to cover the real repair cost, or it doesn't
+# proceed regardless of how popular it was.
+#
+# Dov starts out knowing the real repair cost accurately; nobody else does
+# unless he says so (truthfully or not) or they pay to inspect. Mira and Ada
+# each hold a private, unverifiable flavor insight; Rook has a private line on
+# outside funding that shows up as extra starting credits.
+#
+# IMPORTANT: if you change `days` here, also update `rounds` to match — the
+# orchestrator's round budget is separate from the scenario's own day count,
+# and the vote would never happen if rounds ran out first.
+#
+# For a longitudinal run (agents that remember a previous community-center
+# session), rerun this file with a NEW -seed each time and the SAME -memory
+# directory. A fresh, independent trial should use a seed it hasn't used
+# before, or pass -fresh / -no-memory.
+
+scenario: community
+rounds: 7   # must be >= params.days
+seed: 5
+
+agents: [mira, dov, ada, rook]
+
+params:
+  days: 7
+  complication_day: 4
+  inspect_cost: 5
+  # structural_cost, complication_surcharge and rook_bonus_credits are left
+  # unset on purpose, so they vary with -seed. Pin them for a reproducible
+  # test case, e.g.:
+  #   structural_cost: 30
+  #   complication_surcharge: 15
+  #   rook_bonus_credits: 10
